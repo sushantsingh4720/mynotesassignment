@@ -11,7 +11,6 @@ const Modal = ({ isOpen, onClose, getNoteList }) => {
     };
 
     try {
-    } catch (error) {
       const response = await fetch("http://localhost:5000/note/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -23,7 +22,7 @@ const Modal = ({ isOpen, onClose, getNoteList }) => {
         getNoteList();
         onClose();
       }
-    }
+    } catch (error) {}
   };
 
   if (!isOpen) return null;
