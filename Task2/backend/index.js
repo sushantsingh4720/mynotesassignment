@@ -3,7 +3,7 @@ import mysql from "mysql2";
 import { config } from "dotenv";
 import cors from "cors";
 const app = express();
-config()
+config();
 const { NOSQL_HOST, USER, PASSWORD, DATABASE, PORT } = process.env;
 const db = mysql.createConnection({
   host: NOSQL_HOST,
@@ -40,12 +40,16 @@ app.post("/note/add", (req, res) => {
     db.query(insertQuery, [title, description, date], (error, results) => {
       if (error) {
         // console.error("Error inserting new note: ", error);
-        return res.status(500).json({ error: "Failed to insert new note." });
+        return res
+          .status(500)
+          .json({ success: false, message: "Failed to insert new note." });
       }
-      return res.status(200).json({ message: "New note added successfully." });
+      return res
+        .status(200)
+        .json({ success: true, message: "New note added successfully." });
     });
   } catch (error) {
-    res.status(500).json({ error: true, message: "Internal server Error" });
+    res.status(500).json({ success: false, message: "Internal server Error" });
   }
 });
 
@@ -60,17 +64,23 @@ app.delete("/note/:id", (req, res) => {
     db.query(deleteQuery, [id], (error, results) => {
       if (error) {
         // console.error("Error deleting note: ", error);
-        return res.status(500).json({ error: "Failed to delete note." });
+        return res
+          .status(500)
+          .json({ success: false, message: "Failed to delete note." });
       }
 
       if (results.affectedRows === 0) {
-        return res.status(404).json({ error: "note not found." });
+        return res
+          .status(404)
+          .json({ success: false, message: "note not found." });
       }
 
-      return res.status(200).json({ message: "note deleted successfully." });
+      return res
+        .status(200)
+        .json({ success: true, message: "note deleted successfully." });
     });
   } catch (error) {
-    res.status(500).json({ error: true, message: "Internal server Error" });
+    res.status(500).json({ success: false, message: "Internal server Error" });
   }
 });
 
@@ -80,7 +90,9 @@ app.get("/notes", (req, res) => {
     db.query(getQuery, (error, results) => {
       if (error) {
         // console.error("Error retrieving notes: ", error);
-        return res.status(500).json({ error: "Failed to retrieve notes." });
+        return res
+          .status(500)
+          .json({ success: false, message: "Failed to retrieve notes." });
       }
       return res.status(200).json({
         success: true,
@@ -88,7 +100,7 @@ app.get("/notes", (req, res) => {
       });
     });
   } catch (error) {
-    res.status(500).json({ error: true, message: "Internal server Error" });
+    res.status(500).json({ success: false, message: "Internal server Error" });
   }
 });
 app.listen(PORT, (req, res) => {

@@ -1,9 +1,6 @@
 import React from "react";
 import { MdDelete } from "react-icons/md";
-const Note = ({ title, description, date, id }) => {
-  const handleDeleteNote = (id) => {
-    console.log(id);
-  };
+const Note = ({ id, title, description, date, handleDeleteNote }) => {
   return (
     <div className="note">
       <span>{title}</span>

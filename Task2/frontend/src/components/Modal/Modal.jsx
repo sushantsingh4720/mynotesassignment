@@ -1,12 +1,31 @@
 import React from "react";
 import { createPortal } from "react-dom";
 import "./Modal.scss";
-const Modal = ({ isOpen, onClose }) => {
-  const handleSubmit = (e) => {
+const Modal = ({ isOpen, onClose, getNoteList }) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(e.target[0].name, e.target[0].value);
-    console.log(e.target[1].name, e.target[1].value);
+    const formData = {
+      [e.target[0].name]: e.target[0].value,
+      [e.target[1].name]: e.target[1].value,
+      date: new Date(),
+    };
+
+    try {
+    } catch (error) {
+      const response = await fetch("http://localhost:5000/note/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+        redirect: "follow",
+      });
+      const res = await response.json();
+      if (res.success) {
+        getNoteList();
+        onClose();
+      }
+    }
   };
+
   if (!isOpen) return null;
   return createPortal(
     <div className="modal">
